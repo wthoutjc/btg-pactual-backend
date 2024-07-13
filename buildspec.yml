@@ -8,8 +8,8 @@ phases:
       - echo Installing dependencies...
       - echo Logging in to Amazon ECR...
       - aws --version
-      - aws ecr get-login-password --region <aws-region> | docker login --username AWS --password-stdin <ecr_id>.dkr.ecr.<aws-region>.amazonaws.com
-      - REPOSITORY_URI=<ecr_id>.dkr.ecr.<aws-region>.amazonaws.com/repository
+      - aws ecr get-login-password --region sa-east-1 | docker login --username AWS --password-stdin <ecr_id>.dkr.ecr.sa-east-1.amazonaws.com
+      - REPOSITORY_URI=<ecr_id>.dkr.ecr.sa-east-1.amazonaws.com/repository
       - pip install --upgrade aws-sam-cli
   build:
     commands:
@@ -22,5 +22,5 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:fpv-service
-      - sam package --output-template-file packaged.yaml --image-repository $REPOSITORY_URI --region <aws-region> --s3-bucket lambda-fpv
-      - aws cloudformation deploy --template-file packaged.yaml --stack-name fpv-service --capabilities CAPABILITY_IAM --region <aws-region>
+      - sam package --output-template-file packaged.yaml --image-repository $REPOSITORY_URI --region sa-east-1 --s3-bucket lambda-fpv
+      - aws cloudformation deploy --template-file packaged.yaml --stack-name fpv-service --capabilities CAPABILITY_IAM --region sa-east-1

@@ -3,7 +3,7 @@ from src.services.fund import FundService
 from src.repositories.fund import FundRepository
 from src.repositories.user import UserRepository
 from src.repositories.transaction import TransactionRepository
-from src.schemas.transaction import TransactionOut, TransactionType, TransactionCreate
+from src.schemas.transaction import TransactionOut, TransactionCreate
 from typing import Union
 from src.api.dependencies.database import get_mongodb_repo
 from typing import List
@@ -28,25 +28,24 @@ def get_funds(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-async def subscribe(
+def subscribe(
     transaction_create: TransactionCreate = Body(...),
     fund_service: FundService = Depends(get_fund_service)
 ) -> Union[TransactionOut, HTTPException]:
     try:
-        transaction = await fund_service.subscribe(transaction_create)
+        transaction = fund_service.subscribe(transaction_create)
         if transaction:
             return transaction.model_dump()
         raise HTTPException(status_code=400, detail="An error occurred creating the transaction")
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-async def unsubscribe(
+def unsubscribe(
         fund_id: str = Path(...),
         fund_service: FundService = Depends(get_fund_service)
 ) -> Union[TransactionOut, HTTPException]:
     try:
-        transaction = await fund_service.unsubscribe(fund_id)
-        print('transaction', transaction)
+        transaction = fund_service.unsubscribe(fund_id)
         if transaction:
             return transaction.model_dump()
         raise HTTPException(status_code=400, detail="An error occurred creating the transaction")

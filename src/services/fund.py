@@ -35,7 +35,7 @@ class FundService:
     def get_funds(self) -> List[Fund]:
         return self.fund_repository.get_funds()
 
-    async def subscribe(self, transaction_create: TransactionCreate) -> TransactionOut:
+    def subscribe(self, transaction_create: TransactionCreate) -> TransactionOut:
         fund = self.fund_repository.get_fund_by_id(transaction_create.fund_id)
         if not fund:
             raise ValueError("Fund not found")
@@ -45,7 +45,6 @@ class FundService:
             raise ValueError("User not found")
 
         last_transaction = self.transaction_repository.get_last_transaction_by_user_id(user['id'])
-        print('last_transaction', last_transaction)
 
         if last_transaction and last_transaction['transaction_type'] == TransactionType.SUBSCRIBE.value:
             raise ValueError(f"Ya tiene una suscripción activa al fondo {fund['name']}")
@@ -70,7 +69,7 @@ class FundService:
         self._notify_user(user, fund)
         return self.transaction_repository.create_transaction(transaction)
 
-    async def unsubscribe(self, fund_id: str) -> TransactionOut:
+    def unsubscribe(self, fund_id: str) -> TransactionOut:
         fund = self.fund_repository.get_fund_by_id(fund_id)
         if not fund:
             raise ValueError("Fund not found")
@@ -81,7 +80,6 @@ class FundService:
         minimum_amount = float(fund["minimum_amount"])
 
         last_transaction = self.transaction_repository.get_last_transaction_by_user_id(user['id'])
-        print('last_transaction', last_transaction)
 
         if not last_transaction or last_transaction['transaction_type'] != TransactionType.SUBSCRIBE.value:
             raise ValueError(f"No tiene una suscripción activa al fondo {fund['name']}")
