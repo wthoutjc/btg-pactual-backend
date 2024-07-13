@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from pymongo import MongoClient
 from loguru import logger
-
 from src.core.config import settings
 
 class MongoDB:
