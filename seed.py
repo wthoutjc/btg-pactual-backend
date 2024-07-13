@@ -4,7 +4,7 @@ from bson import ObjectId
 from datetime import datetime
 from pymongo import MongoClient
 from src.schemas.fund import FundCategory, list_fund
-from src.schemas.user import individual_user
+from src.schemas.user import individual_user, NotifyType
 
 funds = [
     {
@@ -43,6 +43,10 @@ user = {
     "_id": ObjectId(),
     "name": "Default User",
     "amount": 500000.0,
+    "notify": {
+        "type": NotifyType.EMAIL.value,
+        "value": "juancamilorr2012@hotmail.com"
+    },
     "created_at": datetime.now()
 }
 

@@ -10,7 +10,6 @@ class TransactionType(PyEnum):
 
 class TransactionCreate(BaseModel):
     fund_id: str
-    amount: float
 
 class TransactionOut(BaseModel):
     id: str

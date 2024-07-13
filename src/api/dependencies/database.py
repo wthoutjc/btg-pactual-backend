@@ -5,7 +5,6 @@ from starlette.requests import Request
 from src.database.base import PyMongoBaseRepo
 
 def _get_mongo_client(request: Request) -> MongoClient:
-    print(request.app)
     return request.app.state.mongo_client
 
 def get_mongodb_repo(repo_type: Type[PyMongoBaseRepo]) -> Callable:
