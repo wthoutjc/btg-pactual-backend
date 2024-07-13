@@ -24,7 +24,7 @@ def get_funds(
     response_description="init a subscribe",
     response_model=TransactionOut
 )
-def subscribe(
+async def subscribe(
     transaction: TransactionOut = Depends(subscribe)
 ):
     return transaction
@@ -36,7 +36,7 @@ def subscribe(
     response_description="init a unsubscribe",
     response_model=TransactionOut
 )
-def unsubscribe(
+async def unsubscribe(
     transaction: TransactionOut = Depends(unsubscribe)
 ):
     return transaction

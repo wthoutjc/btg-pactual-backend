@@ -28,24 +28,25 @@ def get_funds(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-def subscribe(
+async def subscribe(
     transaction_create: TransactionCreate = Body(...),
     fund_service: FundService = Depends(get_fund_service)
 ) -> Union[TransactionOut, HTTPException]:
     try:
-        transaction = fund_service.subscribe(transaction_create)
+        transaction = await fund_service.subscribe(transaction_create)
         if transaction:
             return transaction.model_dump()
         raise HTTPException(status_code=400, detail="An error occurred creating the transaction")
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-def unsubscribe(
+async def unsubscribe(
         fund_id: str = Path(...),
         fund_service: FundService = Depends(get_fund_service)
 ) -> Union[TransactionOut, HTTPException]:
     try:
-        transaction = fund_service.unsubscribe(fund_id)
+        transaction = await fund_service.unsubscribe(fund_id)
+        print('transaction', transaction)
         if transaction:
             return transaction.model_dump()
         raise HTTPException(status_code=400, detail="An error occurred creating the transaction")
