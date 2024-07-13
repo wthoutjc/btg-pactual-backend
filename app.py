@@ -1,25 +1,35 @@
 # uvicorn app:app --host 0.0.0.0 --port 5000 --reload
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from src.api.v1.controller.funds import router
+from src.api.errors.http_error import http_error_handler
+from src.api.errors.validation_error import http422_error_handler
+from src.api.v1.controller import funds, transaction
 from src.core.config import settings
-import logging
+from src.core.events import create_start_app_handler, create_stop_app_handler
 from mangum import Mangum
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-app = FastAPI(title="ETL Extraction Microservice")
+app = FastAPI(title="BTG Pactual FVP Microservice")
 handler = Mangum(app)
 
-app.include_router(router, prefix=settings.API_V1_STR)
-app.include_router(funds.router, prefix="/api/v1/funds", tags=["funds"])
-app.include_router(transactions.router, prefix="/api/v1/transactions", tags=["transactions"])
+app.add_event_handler("startup", create_start_app_handler(app))
+app.add_event_handler("shutdown", create_stop_app_handler(app))
+
+app.add_exception_handler(HTTPException, http_error_handler)
+app.add_exception_handler(RequestValidationError, http422_error_handler)
+
+app.include_router(funds.fund_router, prefix=f"{settings.API_V1_STR}/funds", tags=["funds"])
+app.include_router(transaction.transaction_router, prefix=f"{settings.API_V1_STR}/transactions", tags=["transactions"])
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000"
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
     allow_credentials=True,
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],

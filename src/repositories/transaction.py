@@ -1,13 +1,20 @@
-from src.database.session import db
 from src.models.transaction import Transaction
+from src.schemas.transaction import list_transaction
+from src.database.base import PyMongoBaseRepo
+from pymongo import MongoClient
+from src.core.config import settings
 from bson import ObjectId
+from typing import List
 
-async def create_transaction(transaction: Transaction):
-    transaction_dict = transaction.model_dump()
-    transaction_dict["_id"] = ObjectId()
-    await db.transactions.insert_one(transaction_dict)
-    return transaction_dict
+class TransactionRepository(PyMongoBaseRepo):
+    def __int__(self, mongo: MongoClient):
+        super().__init__(mongo)
 
-async def get_transactions_by_user_id(user_id: str):
-    transactions = await db.transactions.find({"user_id": ObjectId(user_id)}).to_list(length=100)
-    return transactions
+    def create_transaction(self, transaction: Transaction) -> Transaction:
+        transaction_dict = transaction.model_dump()
+        transaction_dict["_id"] = ObjectId()
+        self.database[settings.MONGO_COLLECTION_TRANSACTION].insert_one(transaction_dict)
+        return transaction
+
+    def get_transactions_by_user_id(self, user_id: str) -> List[Transaction]:
+        return list_transaction(self.database[settings.MONGO_COLLECTION_TRANSACTION].find({"user_id": ObjectId(user_id)}))

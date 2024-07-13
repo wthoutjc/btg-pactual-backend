@@ -1,14 +1,29 @@
-from fastapi import APIRouter, HTTPException
-from src.schemas.fund import FundCreate
-from src.services import fund as fund_service
+from fastapi import APIRouter, Depends
+from starlette.status import HTTP_200_OK
 from src.schemas.transaction import TransactionOut
+from src.api.dependencies.dependency_fund import subscribe, unsubscribe
 
-router = APIRouter()
+fund_router = APIRouter()
 
-@router.post("/subscribe", response_model=TransactionOut)
-async def subscribe_to_fund(fund_create: FundCreate, user: User = Depends(get_current_user)):
-    try:
-        transaction = await fund_service.subscribe_to_fund(user.id, fund_create)
-        return transaction
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@fund_router.post(
+    "/subscribe",
+    status_code=HTTP_200_OK,
+    response_description="init a subscribe",
+    response_model=TransactionOut
+)
+async def subscribe(
+    transaction_out: TransactionOut = Depends(subscribe)
+):
+    return transaction_out
+
+
+@fund_router.post(
+    "/unsubscribe/{fund_id}",
+    status_code=HTTP_200_OK,
+    response_description="init a unsubscribe",
+    response_model=TransactionOut
+)
+async def unsubscribe(
+    transaction_out: TransactionOut = Depends(unsubscribe)
+):
+    return transaction_out

@@ -2,9 +2,15 @@ import os
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "mongodb://localhost:27017/btg_pactual")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "supersecretkey")
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    API_V1_STR: str = "/api/v1"
+
+    MONGODB_URL: str = os.getenv("MONGODB_URL", "mongodb://localhost:27017/btg_pactual")
+    MONGO_DATABASE: str = os.getenv("MONGO_DATABASE", "btg_fvp")
+
+    # Collections
+    MONGO_COLLECTION_FUND: str = os.getenv("MONGO_COLLECTION_FUND", default="funds")
+    MONGO_COLLECTION_TRANSACTION: str = os.getenv("MONGO_COLLECTION_TRANSACTION", default="transactions")
+    MONGO_COLLECTION_USER: str = os.getenv("MONGO_COLLECTION_USER", default="users")
 
 settings = Settings()

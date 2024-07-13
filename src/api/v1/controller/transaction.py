@@ -1,18 +1,29 @@
 from fastapi import APIRouter, HTTPException, Depends
-from src.schemas.transaction import TransactionCreate, TransactionOut
-from src.services import transaction as transaction_service
-from src.dependencies import get_current_user
+from starlette.status import HTTP_200_OK
+from src.schemas.transaction import TransactionOut
+from src.api.dependencies.dependency_transaction import create_transaction, get_user_transactions
+from typing import List, Union
 
-router = APIRouter()
+transaction_router = APIRouter()
 
-@router.post("/", response_model=TransactionOut)
-async def create_transaction(transaction_create: TransactionCreate, user: User = Depends(get_current_user)):
-    try:
-        transaction = await transaction_service.create_transaction(user.id, transaction_create.fund_id, transaction_create.amount, "subscribe")
-        return transaction
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@transaction_router.post(
+    "/",
+    status_code=HTTP_200_OK,
+    response_description="create a transaction",
+    response_model=TransactionOut
+)
+def create_transaction(
+    create_transaction: Union[TransactionOut, HTTPException] = Depends(create_transaction)
+):
+    return create_transaction
 
-@router.get("/", response_model=List[TransactionOut])
-async def get_user_transactions(user: User = Depends(get_current_user)):
-    return await transaction_service.get_user_transactions(user.id)
+@transaction_router.get(
+    "/",
+    status_code=HTTP_200_OK,
+    response_description="get all transactions",
+    response_model=List[TransactionOut]
+)
+def get_user_transactions(
+    transactions: List[TransactionOut] = Depends(get_user_transactions)
+):
+    return transactions

@@ -5,11 +5,10 @@ from src.schemas.general import PyObjectId
 from pydantic import BaseModel, Field
 from bson import ObjectId
 
-class Fund(BaseModel):
+class User(BaseModel):
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
     name: str
-    minimum_amount: float
-    category: str
+    amount: float = 500000.0
     created_at: datetime = datetime.now()
 
     class Config:

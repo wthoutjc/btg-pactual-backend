@@ -1,9 +1,16 @@
-from src.database.session import db
 from src.models.fund import Fund
+from src.schemas.fund import individual_fund
+from src.database.base import PyMongoBaseRepo
+from pymongo import MongoClient
+from src.core.config import settings
 
-async def get_fund_by_id(fund_id: str):
-    return await db.funds.find_one({"_id": fund_id})
+class FundRepository(PyMongoBaseRepo):
+    def __int__(self, mongo: MongoClient):
+        super().__init__(mongo)
 
-async def create_fund(fund: Fund):
-    await db.funds.insert_one(fund.model_dump())
-    return fund
+    def get_fund_by_id(self, fund_id: str) -> Fund:
+        return individual_fund(self.database[settings.MONGO_COLLECTION_FUND].find_one({"_id": fund_id}))
+
+    def create_fund(self, fund: Fund) -> Fund:
+        self.database[settings.MONGO_COLLECTION_FUND].insert_one(fund.model_dump())
+        return fund
