@@ -14,13 +14,13 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - docker build --rm -t $REPOSITORY_URI:backend .
-      - docker tag $REPOSITORY_URI:backend $REPOSITORY_URI:backend
-      - sam build --use-container --build-image $REPOSITORY_URI:backend
+      - docker build --rm -t $REPOSITORY_URI:btg-backend .
+      - docker tag $REPOSITORY_URI:btg-backend $REPOSITORY_URI:btg-backend
+      - sam build --use-container --build-image $REPOSITORY_URI:btg-backend
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:backend
+      - docker push $REPOSITORY_URI:btg-backend
       - sam package --output-template-file packaged.yaml --image-repository $REPOSITORY_URI --region sa-east-1 --s3-bucket lambda-fpv
       - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend --capabilities CAPABILITY_IAM --region sa-east-1
