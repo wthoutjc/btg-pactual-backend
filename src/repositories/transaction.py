@@ -22,7 +22,7 @@ class TransactionRepository(PyMongoBaseRepo):
         return transaction
 
     def get_transactions_by_user_id(self, user_id: str) -> List[TransactionOut]:
-        transactions = list_transaction(self.database[settings.MONGO_COLLECTION_TRANSACTION].find({"user_id": user_id}).sort("created_at", -1))
+        transactions = list_transaction(self.database[settings.MONGO_COLLECTION_TRANSACTION].find({"user_id": user_id}).sort("created_at", -1).limit(20))
 
         fund_repo = FundRepository(self._mongo)
         result = []
