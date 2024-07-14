@@ -7,7 +7,7 @@ Globals:
     Timeout: 300
 
 Resources:
-  InventoryFunction:
+  BTGFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
@@ -15,7 +15,7 @@ Resources:
       Runtime: python3.9
       Timeout: 900
       Events:
-        Inventory:
+        FVPApi:
           Type: Api
           Properties:
             Path: /{proxy+}
