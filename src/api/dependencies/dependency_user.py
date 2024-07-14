@@ -10,7 +10,7 @@ def get_user_service(
 ) -> UserService:
     return UserService(user_repository)
 
-def get(
+def get_user(
         user_service: UserService = Depends(get_user_service)
 ) -> Union[User, None]:
     try:
@@ -23,7 +23,7 @@ def get(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-def update(
+def update_user(
         user_id: str = Path(...),
         user_update: UserCreate = Body(...),
         user_service: UserService = Depends(get_user_service)

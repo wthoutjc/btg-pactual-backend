@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from starlette.status import HTTP_200_OK
 from src.schemas.user import User
-from src.api.dependencies.dependency_user import get, update
+from src.api.dependencies.dependency_user import get_user, update_user
 
 user_router = APIRouter()
 
@@ -12,7 +12,7 @@ user_router = APIRouter()
     response_model=User
 )
 def get(
-    user: User = Depends(get)
+    user: User = Depends(get_user)
 ):
     return user
 
@@ -23,6 +23,6 @@ def get(
     response_model=User
 )
 def update_user(
-    user: User = Depends(update)
+    user: User = Depends(update_user)
 ):
     return user
