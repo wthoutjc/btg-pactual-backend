@@ -11,6 +11,7 @@ from mangum import Mangum
 
 # Importar librerias de mongo para verificar que la conecccion se esta realizando correctamente
 from pymongo import MongoClient
+from src.schemas.fund import list_fund
 
 def get_application() -> FastAPI:
     app = FastAPI(title="BTG Pactual FVP Microservice")
@@ -32,7 +33,7 @@ def get_application() -> FastAPI:
         client = MongoClient(settings.MONGODB_URL)
         db = client[settings.MONGO_DATABASE]
         funds_collection = db[settings.MONGO_COLLECTION_FUND]
-        funds = funds_collection.find()
+        funds = list_fund(funds_collection.find())
         print(f"[DEBUG] Funds: {funds}")
         return {"status": "ok", "message": "Health check", "data": {"funds": funds}}
 
