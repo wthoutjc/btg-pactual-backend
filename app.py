@@ -22,6 +22,11 @@ def get_application() -> FastAPI:
     app.include_router(transaction.transaction_router, prefix=f"{settings.API_V1_STR}/transactions", tags=["transactions"])
     app.include_router(user.user_router, prefix=f"{settings.API_V1_STR}/user", tags=["user"])
 
+    # Health Check
+    @app.get("/health")
+    async def health():
+        return {"status": "ok"}
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
