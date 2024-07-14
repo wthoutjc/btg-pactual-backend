@@ -9,6 +9,9 @@ from src.core.config import settings
 from src.core.events import create_start_app_handler, create_stop_app_handler
 from mangum import Mangum
 
+# Importar librerias de mongo para verificar que la conecccion se esta realizando correctamente
+from pymongo import MongoClient
+
 def get_application() -> FastAPI:
     app = FastAPI(title="BTG Pactual FVP Microservice")
 
@@ -26,7 +29,12 @@ def get_application() -> FastAPI:
     @app.get("/health")
     async def health():
         print(f"[DEBUG] Health check")
-        return {"status": "ok"}
+        client = MongoClient(settings.MONGODB_URL)
+        db = client[settings.MONGO_DATABASE]
+        funds_collection = db[settings.MONGO_COLLECTION_FUND]
+        funds = funds_collection.find()
+        print(f"[DEBUG] Funds: {funds}")
+        return {"status": "ok", "message": "Health check", "data": {"funds": funds}}
 
     app.add_middleware(
         CORSMiddleware,
