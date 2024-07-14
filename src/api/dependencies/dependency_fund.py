@@ -24,9 +24,7 @@ def get_funds(
     fund_service: FundService = Depends(get_fund_service)
 ) -> List[FundOut]:
     try:
-        funds = fund_service.get_funds()
-        print(funds)
-        return funds
+        return fund_service.get_funds()
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

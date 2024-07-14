@@ -20,7 +20,8 @@ def individual_fund(fund: Fund) -> dict:
         "id": str(fund["_id"]),
         "name": fund["name"],
         "minimum_amount": fund["minimum_amount"],
-        "category": fund["category"]
+        "category": fund["category"],
+        "last_transaction": fund["last_transaction"] if "last_transaction" in fund else None
     }
 
 def list_fund(funds: List[Fund]):
