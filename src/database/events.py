@@ -10,6 +10,7 @@ mongo_db = MongoDB()
 
 def connect_to_mongo(app: FastAPI) -> None:
     logger.info("[INFO] Connecting to MongoDB...")
+    print(f"[DEBUG] MongoDB URL: {settings.MONGODB_URL}")
     mongo_client = MongoClient(settings.MONGODB_URL)
     mongo_db.client = mongo_client
     app.state.mongo_client = mongo_client
