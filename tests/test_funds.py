@@ -35,7 +35,7 @@ def test_subscribe_to_fund(client: httpx.AsyncClient):
         funds = response_funds.json()
 
         fund = funds[0]
-        fund_id = fund["_id"]
+        fund_id = fund["id"]
 
         response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id })
         assert response.status_code == 200
@@ -47,7 +47,7 @@ def test_subscribe_to_fund_active_subscription(client: httpx.AsyncClient):
         funds = response_funds.json()
 
         fund = funds[0]
-        fund_id = fund["_id"]
+        fund_id = fund["id"]
 
         response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id})
         assert response.status_code == 400
@@ -58,7 +58,7 @@ def test_unsubscribe_from_fund(client: httpx.AsyncClient):
         funds = response_funds.json()
 
         fund = funds[0]
-        fund_id = fund["_id"]
+        fund_id = fund["id"]
 
         response = client.put(f"{settings.API_V1_STR}/funds/unsubscribe/{fund_id}")
         assert response.status_code == 200
@@ -70,7 +70,7 @@ def test_unsubscribe_from_fund_no_active_subscription(client: httpx.AsyncClient)
         funds = response_funds.json()
 
         fund = funds[0]
-        fund_id = fund["_id"]
+        fund_id = fund["id"]
 
         response = client.put(f"{settings.API_V1_STR}/funds/unsubscribe/{fund_id}")
         assert response.status_code == 400
@@ -86,7 +86,7 @@ def test_subscribe_to_fund_insufficient_balance(client: httpx.AsyncClient):
         funds = response_funds.json()
 
         fund = funds[0]
-        fund_id = fund["_id"]
+        fund_id = fund["id"]
 
         response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id})
         assert response.status_code == 400

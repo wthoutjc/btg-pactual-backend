@@ -7,7 +7,7 @@ from src.schemas.transaction import TransactionOut, TransactionCreate
 from typing import Union
 from src.api.dependencies.database import get_mongodb_repo
 from typing import List
-from src.models.fund import Fund
+from src.schemas.fund import FundOut
 from src.services.email import EmailService
 from src.services.whatsapp import WhatsappService
 
@@ -22,9 +22,11 @@ def get_fund_service(
 
 def get_funds(
     fund_service: FundService = Depends(get_fund_service)
-) -> List[Fund]:
+) -> List[FundOut]:
     try:
-        return fund_service.get_funds()
+        funds = fund_service.get_funds()
+        print(funds)
+        return funds
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

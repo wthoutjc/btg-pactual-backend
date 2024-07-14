@@ -1,10 +1,19 @@
 from src.models.fund import Fund
-from typing import List
+from typing import List, Optional
 from enum import Enum as PyEnum
+from pydantic import BaseModel
 
 class FundCategory(PyEnum):
     FPV = "FPV"
     FIC = "FIC"
+
+class FundOut(BaseModel):
+    id: str
+    name: str
+    minimum_amount: float
+    category: FundCategory
+    last_transaction: Optional[dict]
+
 
 def individual_fund(fund: Fund) -> dict:
     return {

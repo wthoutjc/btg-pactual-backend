@@ -42,7 +42,14 @@ class TransactionRepository(PyMongoBaseRepo):
 
         return result
 
-    def get_last_transaction_by_user_id(self, user_id: str) -> Transaction:
+    def get_last_transaction_by_fund_id(self, fund_id: str) -> dict:
+        transaction = self.database[settings.MONGO_COLLECTION_TRANSACTION].find_one(
+            {"fund_id": fund_id},
+            sort=[("created_at", -1)]
+        )
+        return individual_transaction(transaction) if transaction else None
+
+    def get_last_transaction_by_user_id(self, user_id: str) -> dict:
         transaction = self.database[settings.MONGO_COLLECTION_TRANSACTION].find_one(
             {"user_id": user_id},
             sort=[("created_at", -1)]

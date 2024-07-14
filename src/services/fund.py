@@ -1,5 +1,6 @@
 from src.schemas.user import NotifyType
 from src.models.fund import Fund
+from src.schemas.fund import FundOut
 from src.repositories.fund import FundRepository
 from src.repositories.user import UserRepository
 from src.repositories.transaction import TransactionRepository
@@ -32,8 +33,12 @@ class FundService:
         elif notify["type"] == NotifyType.SMS:
             self.whatsapp_service.send_message(user, fund)
 
-    def get_funds(self) -> List[Fund]:
-        return self.fund_repository.get_funds()
+    def get_funds(self) -> List[FundOut]:
+        funds = self.fund_repository.get_funds()
+        for fund in funds:
+            last_transaction = self.transaction_repository.get_last_transaction_by_fund_id(fund['id'])
+            fund['last_transaction'] = last_transaction
+        return funds
 
     def subscribe(self, transaction_create: TransactionCreate) -> TransactionOut:
         fund = self.fund_repository.get_fund_by_id(transaction_create.fund_id)
