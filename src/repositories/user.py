@@ -18,7 +18,6 @@ class UserRepository(PyMongoBaseRepo):
 
     def get(self) -> Union[User, None]:
         user = self.database[settings.MONGO_COLLECTION_USER].find_one({})
-        print(f"[DEBUG] User: {user}")
         return individual_user(user) if user else None
 
     def update(self, user_id: str, user_update: User) -> Union[User, None]:
