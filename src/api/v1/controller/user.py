@@ -9,12 +9,12 @@ user_router = APIRouter()
     "/",
     status_code=HTTP_200_OK,
     response_description="get user",
-    response_model=User
+    # response_model=User
 )
-def get(
-    user: User = Depends(get)
-):
-    return user
+def get():
+    # user: User = Depends(get)
+    return "user"
+    # return user
 
 @user_router.put(
     "/{user_id}",
