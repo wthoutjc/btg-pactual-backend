@@ -48,8 +48,8 @@ class WhatsappService:
             data = response.json()
             return data
         except requests.exceptions.HTTPError as http_err:
-            print(f"[ERROR] HTTP error occurred: {http_err}")
-            print(f"[ERROR] Response content: {http_err.response.content}")
+            print(f"[ERROR] WhatsappService.HTTP error occurred: {http_err}")
+            print(f"[ERROR] WhatsappService.Response content: {http_err.response.content}")
         except Exception as e:
             print(f"[ERROR] WhatsappService.send_message: {str(e)}")
             raise e
