@@ -13,8 +13,7 @@ class TransactionCreate(BaseModel):
 
 class TransactionOut(BaseModel):
     id: str
-    user_id: str
-    fund_id: str
+    fund: dict
     amount: float
     transaction_type: TransactionType
     created_at: datetime

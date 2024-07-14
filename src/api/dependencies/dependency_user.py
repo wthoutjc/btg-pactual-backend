@@ -14,9 +14,7 @@ def get_user(
         user_service: UserService = Depends(get_user_service)
 ) -> Union[User, None]:
     try:
-        print(f"[DEBUG] get_user_service: {user_service}")
         user = user_service.get()
-        print(f"[DEBUG] user: {user}")
         if user:
             return user
         raise HTTPException(status_code=404, detail="User not found")
