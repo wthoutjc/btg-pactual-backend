@@ -58,16 +58,23 @@ class FundService:
         new_amount = float(amount- minimum_amount)
         self.user_repository.update_user_amount(user['id'], new_amount)
 
-        transaction = Transaction(
+        transaction = self.transaction_repository.create_transaction(Transaction(
             user_id=user['id'],
             fund_id=fund['id'],
             amount=minimum_amount,
             transaction_type=TransactionType.SUBSCRIBE.value,
             created_at=datetime.now()
-        )
+        ))
 
         self._notify_user(user, fund)
-        return self.transaction_repository.create_transaction(transaction)
+
+        return TransactionOut(
+            id=str(transaction.id),
+            fund=fund,
+            amount=minimum_amount,
+            transaction_type=TransactionType.SUBSCRIBE,
+            created_at=transaction.created_at
+        )
 
     def unsubscribe(self, fund_id: str) -> TransactionOut:
         fund = self.fund_repository.get_fund_by_id(fund_id)
@@ -87,11 +94,18 @@ class FundService:
         new_amount = float(amount + minimum_amount)
         self.user_repository.update_user_amount(user['id'], new_amount)
 
-        transaction = Transaction(
+        transaction = self.transaction_repository.create_transaction(Transaction(
             user_id=user['id'],
             fund_id=fund_id,
             amount=minimum_amount,
             transaction_type=TransactionType.UNSUBSCRIBE.value,
             created_at=datetime.now()
+        ))
+
+        return TransactionOut(
+            id=str(transaction.id),
+            fund=fund,
+            amount=minimum_amount,
+            transaction_type=TransactionType.UNSUBSCRIBE,
+            created_at=transaction.created_at
         )
-        return self.transaction_repository.create_transaction(transaction)
