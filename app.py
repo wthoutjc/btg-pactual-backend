@@ -25,6 +25,7 @@ def get_application() -> FastAPI:
     # Health Check
     @app.get("/health")
     async def health():
+        print(f"[DEBUG] Health check")
         return {"status": "ok"}
 
     app.add_middleware(
