@@ -2,8 +2,6 @@ from fastapi import FastAPI
 from pymongo import MongoClient
 from loguru import logger
 from src.core.config import settings
-import certifi
-ca = certifi.where()
 
 class MongoDB:
     client: MongoClient = None
@@ -12,7 +10,7 @@ mongo_db = MongoDB()
 
 def connect_to_mongo(app: FastAPI) -> None:
     logger.info("[INFO] Connecting to MongoDB...")
-    mongo_client = MongoClient(settings.MONGODB_URL, tlsCAFile=ca)
+    mongo_client = MongoClient(settings.MONGODB_URL)
     mongo_db.client = mongo_client
     app.state.mongo_client = mongo_client
     logger.info("[INFO] MongoDB connection succeeded")
