@@ -6,7 +6,7 @@ from src.api.dependencies.dependency_user import get_user, update_user
 user_router = APIRouter()
 
 @user_router.get(
-    "/all",
+    "/me",
     status_code=HTTP_200_OK,
     response_description="get user",
     response_model=User

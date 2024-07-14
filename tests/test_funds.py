@@ -21,17 +21,17 @@ def setup_mongo():
     app.state.mongo_client.close()
 
 def test_get_funds(client: httpx.AsyncClient):
-        response_user = client.get(f"{settings.API_V1_STR}/user")
+        response_user = client.get(f"{settings.API_V1_STR}/user/me")
         user = response_user.json()
 
         client.put(f"{settings.API_V1_STR}/user/{user['_id']}", json={**user, "amount": 500000})
-        response = client.get(f"{settings.API_V1_STR}/funds")
+        response = client.get(f"{settings.API_V1_STR}/funds/all")
         assert response.status_code == 200
         funds = response.json()
         assert len(funds) == 5
 
 def test_subscribe_to_fund(client: httpx.AsyncClient):
-        response_funds = client.get(f"{settings.API_V1_STR}/funds")
+        response_funds = client.get(f"{settings.API_V1_STR}/funds/all")
         funds = response_funds.json()
 
         fund = funds[0]
@@ -43,7 +43,7 @@ def test_subscribe_to_fund(client: httpx.AsyncClient):
         assert transaction["transaction_type"] == TransactionType.SUBSCRIBE.value
 
 def test_subscribe_to_fund_active_subscription(client: httpx.AsyncClient):
-        response_funds = client.get(f"{settings.API_V1_STR}/funds")
+        response_funds = client.get(f"{settings.API_V1_STR}/funds/all")
         funds = response_funds.json()
 
         fund = funds[0]
@@ -54,7 +54,7 @@ def test_subscribe_to_fund_active_subscription(client: httpx.AsyncClient):
         assert "Ya tiene una suscripción activa" in response.json()["errors"][0]
 
 def test_unsubscribe_from_fund(client: httpx.AsyncClient):
-        response_funds = client.get(f"{settings.API_V1_STR}/funds")
+        response_funds = client.get(f"{settings.API_V1_STR}/funds/all")
         funds = response_funds.json()
 
         fund = funds[0]
@@ -66,7 +66,7 @@ def test_unsubscribe_from_fund(client: httpx.AsyncClient):
         assert transaction["transaction_type"] == TransactionType.UNSUBSCRIBE.value
 
 def test_unsubscribe_from_fund_no_active_subscription(client: httpx.AsyncClient):
-        response_funds = client.get(f"{settings.API_V1_STR}/funds")
+        response_funds = client.get(f"{settings.API_V1_STR}/funds/all")
         funds = response_funds.json()
 
         fund = funds[0]
@@ -77,12 +77,12 @@ def test_unsubscribe_from_fund_no_active_subscription(client: httpx.AsyncClient)
         assert "No tiene una suscripción activa" in response.json()["errors"][0]
 
 def test_subscribe_to_fund_insufficient_balance(client: httpx.AsyncClient):
-        response_user = client.get(f"{settings.API_V1_STR}/user")
+        response_user = client.get(f"{settings.API_V1_STR}/user/me")
         user = response_user.json()
 
         client.put(f"{settings.API_V1_STR}/user/{user['_id']}", json={**user, "amount": 0})
 
-        response_funds = client.get(f"{settings.API_V1_STR}/funds")
+        response_funds = client.get(f"{settings.API_V1_STR}/funds/all")
         funds = response_funds.json()
 
         fund = funds[0]
