@@ -8,7 +8,7 @@ from typing import List
 fund_router = APIRouter()
 
 @fund_router.get(
-    "/",
+    "/all",
     status_code=HTTP_200_OK,
     response_description="get all funds",
     response_model=List[Fund]
