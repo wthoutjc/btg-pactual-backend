@@ -5,15 +5,15 @@ from src.api.dependencies.dependency_user import get, update
 
 user_router = APIRouter()
 
-@user_router.get(
-    "/",
-    status_code=HTTP_200_OK,
-    response_description="get user",
-    # response_model=User
-)
-def get():
+# @user_router.get(
+#     "/",
+#     status_code=HTTP_200_OK,
+#     response_description="get user",
+#     # response_model=User
+# )
+# def get():
     # user: User = Depends(get)
-    return "user"
+    # return "user"
     # return user
 
 @user_router.put(

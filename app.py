@@ -1,5 +1,5 @@
 # uvicorn app:app --host 0.0.0.0 --port 5000 --reload
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from src.api.errors.http_error import http_error_handler
@@ -12,6 +12,9 @@ from mangum import Mangum
 # Importar librerias de mongo para verificar que la conecccion se esta realizando correctamente
 from pymongo import MongoClient
 from src.schemas.fund import list_fund
+from starlette.status import HTTP_200_OK
+from src.schemas.user import User
+from src.api.dependencies.dependency_user import get as get_user
 
 def get_application() -> FastAPI:
     app = FastAPI(title="BTG Pactual FVP Microservice")
@@ -25,6 +28,10 @@ def get_application() -> FastAPI:
     app.include_router(funds.fund_router, prefix="/funds", tags=["funds"])
     app.include_router(transaction.transaction_router, prefix="/transactions", tags=["transactions"])
     app.include_router(user.user_router, prefix="/user", tags=["user"])
+
+    @app.get("/user")
+    def get(user: User = Depends(get_user)):
+        return user
 
     # Health Check
     @app.get("/health")
@@ -44,16 +51,16 @@ def get_application() -> FastAPI:
         print(f"[DEBUG] Funds: {funds}")
         return {"status": "ok", "message": "Health check", "data": {"funds": funds}}
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-        expose_headers=["*"],
-    )
-
     return app
 
 app = get_application()
 handler = Mangum(app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
