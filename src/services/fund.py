@@ -91,9 +91,10 @@ class FundService:
         amount = float(user["amount"])
         minimum_amount = float(fund["minimum_amount"])
 
-        last_transaction = self.transaction_repository.get_last_transaction_by_user_id(user['id'])
+        last_transaction = self.transaction_repository.get_last_transaction_by_fund_id(fund['id'])
 
-        if not last_transaction or last_transaction['transaction_type'] != TransactionType.SUBSCRIBE.value or last_transaction['fund_id'] != fund['id']:
+        # Si no existe una última transacción o la última transacción no es una suscripción al fondo
+        if (not last_transaction or last_transaction['transaction_type'] != TransactionType.SUBSCRIBE.value):
             raise ValueError(f"No tiene una suscripción activa al fondo {fund['name']}")
 
         new_amount = float(amount + minimum_amount)
