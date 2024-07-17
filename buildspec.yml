@@ -6,17 +6,13 @@ phases:
       python: 3.9
     commands:
       - echo Installing dependencies...
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      - aws ecr get-login-password --region sa-east-1 | docker login --username AWS --password-stdin 992382560327.dkr.ecr.sa-east-1.amazonaws.com/btg-pactual-17-7-24
-      - REPOSITORY_URI=992382560327.dkr.ecr.sa-east-1.amazonaws.com/btg-pactual-17-7-24/btg-pactual-17-7-24
       - pip install --upgrade aws-sam-cli
   build:
     commands:
       - echo Build started on `date`
       - docker build --rm -t $REPOSITORY_URI:btg-backend .
-      - docker tag $REPOSITORY_URI:btg-backend $REPOSITORY_URI:btg-backend
-      - sam build --use-container --build-image $REPOSITORY_URI:btg-backend
+      - docker tag wthoutjc/btg-backend:latest $REPOSITORY_URI:btg-backend
+      - sam build --use-container --build-image $REPOSITORY_URI:btg-backend:latest
   post_build:
     commands:
       - echo Build completed on `date`
