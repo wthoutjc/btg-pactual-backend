@@ -20,3 +20,5 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: ANY
+      Tags:
+        Name: "Juan Camilo Ramírez Rátiva"
