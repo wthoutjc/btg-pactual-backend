@@ -16,9 +16,7 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Logging in to Docker Hub...
-      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - echo Pushing the Docker images...
       - docker push wthoutjc/btg-backend:latest
       - sam package --output-template-file packaged.yaml --image-repository wthoutjc/btg-backend --region sa-east-1 --s3-bucket lambda-fpv-17-7-24
-      - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend --capabilities CAPABILITY_IAM --region sa-east-1
+      - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend --capabilities CAPABILITY_IAM --region sa-east-1 --tags Name="Juan Camilo Ramírez Rátiva"
