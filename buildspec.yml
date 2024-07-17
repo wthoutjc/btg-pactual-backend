@@ -10,13 +10,15 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - docker build --rm -t $REPOSITORY_URI:btg-backend .
-      - docker tag wthoutjc/btg-backend:latest $REPOSITORY_URI:btg-backend
-      - sam build --use-container --build-image $REPOSITORY_URI:btg-backend:latest
+      - docker build --rm -t btg-backend:latest .
+      - docker tag btg-backend:latest wthoutjc/btg-backend:latest
+      - sam build --use-container --build-image wthoutjc/btg-backend:latest
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo Logging in to Docker Hub...
+      - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:btg-backend
-      - sam package --output-template-file packaged.yaml --image-repository $REPOSITORY_URI --region sa-east-1 --s3-bucket lambda-fpv-17-7-24
-      - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend --capabilities CAPABILITY_IAM --region sa-east-1 --tags Name="Juan Camilo Ramírez Rátiva"
+      - docker push wthoutjc/btg-backend:latest
+      - sam package --output-template-file packaged.yaml --image-repository wthoutjc/btg-backend --region sa-east-1 --s3-bucket lambda-fpv-17-7-24
+      - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend --capabilities CAPABILITY_IAM --region sa-east-1
