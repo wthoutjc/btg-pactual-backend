@@ -10,6 +10,7 @@ Resources:
   BTGFunction:
     Type: AWS::Serverless::Function
     Properties:
+      ImageUri: wthoutjc/btg-backend:latest
       CodeUri: .
       Handler: app.handler
       Runtime: python3.9
