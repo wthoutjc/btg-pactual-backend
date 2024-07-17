@@ -17,4 +17,4 @@ phases:
     commands:
       - echo Build completed on `date`
       - sam package --output-template-file packaged.yaml --region sa-east-1 --s3-bucket lambda-fpv-17-7-24
-      - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend --capabilities CAPABILITY_IAM --region sa-east-1 --tags Name="Juan Camilo Ramírez Rátiva"
+      - aws cloudformation deploy --template-file packaged.yaml --stack-name btg-backend-1 --capabilities CAPABILITY_IAM --region sa-east-1 --tags Name="Juan Camilo Ramírez Rátiva"
