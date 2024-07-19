@@ -5,12 +5,13 @@ from src.models.whatsapp import MessageTemplateRequest, Template, \
     Language
 from src.models.user import User
 from src.models.fund import Fund
+from src.models.transaction import Transaction
 
 WHATSAPP_URL=settings.WHATSAPP_URL
 
 class WhatsappService:
     @staticmethod
-    def send_message(user: User, fund: Fund):
+    def send_message(user: User, fund: Fund, transaction: Transaction) -> dict:
         try:
             headers = {
                 "Authorization": f"Bearer {settings.WHATSAPP_TOKEN}",
@@ -22,7 +23,7 @@ class WhatsappService:
                 parameters=[
                     Parameter(type="text", text=user["name"]),
                     Parameter(type="text", text=fund["name"]),
-                    Parameter(type="text", text=fund['minimum_amount'])
+                    Parameter(type="text", text=transaction.amount)
                 ]
             )
 
