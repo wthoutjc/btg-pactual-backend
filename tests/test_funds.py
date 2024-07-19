@@ -37,7 +37,7 @@ def test_subscribe_to_fund(client: httpx.AsyncClient):
         fund = funds[0]
         fund_id = fund["id"]
 
-        response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id })
+        response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id, "amount": 250000 })
         assert response.status_code == 200
         transaction = response.json()
         assert transaction["transaction_type"] == TransactionType.SUBSCRIBE.value
@@ -49,7 +49,7 @@ def test_subscribe_to_fund_active_subscription(client: httpx.AsyncClient):
         fund = funds[0]
         fund_id = fund["id"]
 
-        response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id})
+        response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id, "amount": 250000 })
         assert response.status_code == 400
         assert "Ya tiene una suscripción activa" in response.json()["errors"][0]
 
@@ -88,6 +88,6 @@ def test_subscribe_to_fund_insufficient_balance(client: httpx.AsyncClient):
         fund = funds[0]
         fund_id = fund["id"]
 
-        response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id})
+        response = client.post(f"{settings.API_V1_STR}/funds/subscribe", json={"fund_id": fund_id, "amount": 750000 })
         assert response.status_code == 400
         assert "No tiene saldo disponible para vincularse al fondo" in response.json()["errors"][0]
